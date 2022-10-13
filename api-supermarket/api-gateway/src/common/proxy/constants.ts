@@ -5,16 +5,36 @@ export enum RabbitMQ {
 
 /* AdminModule Constants */
 export enum AdminManagerMSG {
-  GET_ONE = 'GET_ONE',
   GET_ALL = 'GET_ALL',
+  GET_ONE = 'GET_ONE',
   CREATE = 'CREATE',
   UPDATE = 'UPDATE',
   DELETE = 'DELETE',
 }
 
 export enum AdminSupermarketMSG {
-  GET_ONE = 'GET_ONE',
   GET_ALL = 'GET_ALL',
+  GET_ONE = 'GET_ONE',
 }
 /* END AdminModule Constants */
 
+/* ManagerModule Constants */
+export enum ManagerDepartmentMSG {
+  GET_ALL = 'GET_ALL',
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+}
+
+export enum ManagerEmployeeMSG {
+  GET_ALL = 'GET_ALL',
+  GET_ONE = 'GET_ONE',
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+}
+
+export enum ManagerSupermarketMSG {
+  CREATE = 'CREATE',
+}
+/* END ManagerModule Constants */
