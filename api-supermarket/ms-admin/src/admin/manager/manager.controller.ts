@@ -3,7 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ManagerDTO } from 'src/common/models/ms-admin/dto/manager.dto';
 import { AdminManagerMSG } from 'src/common/utils/proxy/constants';
 
-@Controller('manager')
+@Controller()
 export class ManagerController {
 
   /** Get all managers */
