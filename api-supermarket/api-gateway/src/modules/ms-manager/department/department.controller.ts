@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { DepartmentDTO } from './dto/department.dto';
-import { ClientProxySupermarket } from 'src/common/proxy/client-proxy';
-import { ManagerDepartmentMSG } from 'src/common/proxy/constants';
+import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
+import { ManagerDepartmentMSG } from 'src/common/utils/proxy/constants';
 
 
 @Controller('api/v1/manager/department')

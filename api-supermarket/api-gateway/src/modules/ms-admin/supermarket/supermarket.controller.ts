@@ -1,6 +1,6 @@
 import { Controller,Param,Get } from '@nestjs/common';
-import { ClientProxySupermarket } from 'src/common/proxy/client-proxy';
-import { AdminSupermarketMSG } from 'src/common/proxy/constants';
+import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
+import { AdminSupermarketMSG } from 'src/common/utils/proxy/constants';
 
 @Controller('api/v1/admin/supermarket')
 export class SupermarketController {

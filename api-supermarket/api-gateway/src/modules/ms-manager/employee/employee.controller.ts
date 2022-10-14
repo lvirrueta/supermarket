@@ -8,8 +8,8 @@ import {
   Body
 } from '@nestjs/common';
 import { EmployeeDTO } from './dto/employee.dto';
-import { ClientProxySupermarket } from 'src/common/proxy/client-proxy';
-import { ManagerEmployeeMSG } from 'src/common/proxy/constants';
+import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
+import { ManagerEmployeeMSG } from 'src/common/utils/proxy/constants';
 
 @Controller('api/v1/manager/employee')
 export class EmployeeController {

@@ -7,8 +7,8 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { ClientProxySupermarket } from 'src/common/proxy/client-proxy';
-import { AdminManagerMSG } from 'src/common/proxy/constants';
+import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
+import { AdminManagerMSG } from 'src/common/utils/proxy/constants';
 import { ManagerDTO } from '../manager/dto/manager.dto';
 
 @Controller('api/v1/admin/manager')
