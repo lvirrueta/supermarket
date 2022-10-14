@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
-import { DepartmentDTO } from './dto/department.dto';
+import { DepartmentDTO } from '../../../common/models/ms-manager/dto/department.dto';
 import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
 import { ManagerDepartmentMSG } from 'src/common/utils/proxy/constants';
 

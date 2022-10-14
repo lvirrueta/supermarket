@@ -7,7 +7,7 @@ import {
   Param,
   Body
 } from '@nestjs/common';
-import { EmployeeDTO } from './dto/employee.dto';
+import { EmployeeDTO } from '../../../common/models/ms-manager/dto/employee.dto';
 import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
 import { ManagerEmployeeMSG } from 'src/common/utils/proxy/constants';
 

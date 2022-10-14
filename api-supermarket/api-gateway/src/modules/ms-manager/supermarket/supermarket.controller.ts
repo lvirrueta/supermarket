@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { SupermarketDTO } from './dto/supermarket.dto';
+import { SupermarketDTO } from '../../../common/models/ms-manager/dto/supermarket.dto';
 import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
 import { ManagerSupermarketMSG } from 'src/common/utils/proxy/constants';
 

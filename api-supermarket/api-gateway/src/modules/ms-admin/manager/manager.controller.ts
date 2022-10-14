@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
 import { AdminManagerMSG } from 'src/common/utils/proxy/constants';
-import { ManagerDTO } from '../manager/dto/manager.dto';
+import { ManagerDTO } from '../../../common/models/ms-admin/dto/manager.dto';
 
 @Controller('api/v1/admin/manager')
 export class ManagerController {
