@@ -1,20 +1,24 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class ManagerDTO {
+export class Supermarket {
   @ApiProperty()
   name: string;
   @ApiProperty()
-  fathersLastName: string;
+  businessName: string;
   @ApiProperty()
-  mothersLastName: string;
+  postalCode: number;
   @ApiProperty()
-  dateBirth: Date;
+  suburb: string;
   @ApiProperty()
-  genere: string;
+  street: string;
+  @ApiProperty()
+  number: number;
+  @ApiProperty()
+  state: string;
+  @ApiProperty()
+  city: string;
   @ApiProperty()
   email: string;
   @ApiProperty()
   phone: number;
-  @ApiProperty()
-  password: string;
 }
