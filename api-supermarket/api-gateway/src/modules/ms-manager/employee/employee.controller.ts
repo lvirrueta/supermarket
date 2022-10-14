@@ -101,6 +101,6 @@ export class EmployeeController {
   })
   @Delete('delete/:id')
   deleteEmployee(@Param('id') id: string) {
-    return this.clientProxyManager.send(ManagerEmployeeMSG.UPDATE, id);
+    return this.clientProxyManager.send(ManagerEmployeeMSG.DELETE, id);
   }
 }
