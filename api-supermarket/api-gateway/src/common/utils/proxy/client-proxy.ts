@@ -7,7 +7,7 @@ import { RabbitMQ } from "./constants";
 export class ClientProxySupermarket {
   constructor(private readonly config: ConfigService) { }
 
-  /* proxy of module admin */
+  /** Proxy of module admin */
   clientProxyAdmin(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
@@ -18,7 +18,7 @@ export class ClientProxySupermarket {
     })
   }
 
-  /* proxy of module manager */
+  /** Proxy of module manager */
   clientProxyManager(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
