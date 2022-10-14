@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AdminModule } from './modules/admin/admin.module';
-import { ManagerModule } from './modules/manager/manager.module';
+import { AdminModule } from './modules/ms-admin/admin.module';
+import { ManagerModule } from './modules/ms-manager/manager.module';
 
 @Module({
   imports: [
