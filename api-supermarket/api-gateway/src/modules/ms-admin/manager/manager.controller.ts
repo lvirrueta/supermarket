@@ -101,7 +101,7 @@ export class ManagerController {
     type: Boolean,
   })
   @Delete('/delete/:id')
-  delete(@Param('id') id: string) {
+  deleteManager(@Param('id') id: string) {
     return this.clientProxyAdmin.send(AdminManagerMSG.DELETE, id);
   }
 
