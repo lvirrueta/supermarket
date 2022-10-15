@@ -17,7 +17,7 @@ import { AdminModule } from './admin/admin.module';
       password: process.env.DB_PSWD,
       database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      synchronize: true,
     })
   ],
 
