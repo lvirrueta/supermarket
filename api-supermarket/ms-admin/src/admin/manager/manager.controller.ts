@@ -1,10 +1,12 @@
-import { Controller } from '@nestjs/common';
+import { Controller, HttpException } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ManagerDTO } from 'src/common/models/ms-admin/dto/manager.dto';
 import { AdminManagerMSG } from 'src/common/utils/proxy/constants';
+import { ManagerService } from './manager.service';
 
 @Controller()
 export class ManagerController {
+  constructor(private managerService: ManagerService){}
 
   /** Get all managers */
   @MessagePattern(AdminManagerMSG.GET_ALL)
@@ -20,8 +22,8 @@ export class ManagerController {
 
   /** Create a manager */
   @MessagePattern(AdminManagerMSG.CREATE)
-  createManager(@Payload() managerDTO: ManagerDTO) {
-    return 'hi ms im create';
+  async createManagerController(@Payload() managerDTO: ManagerDTO): Promise <boolean | HttpException> {
+    return await this.managerService.createManagerService(managerDTO);
   }
 
   /** Update a manager */

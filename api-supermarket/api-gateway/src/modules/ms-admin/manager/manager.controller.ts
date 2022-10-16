@@ -7,9 +7,11 @@ import {
   Param,
   Delete,
   Controller,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 // Dependencies
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom, lastValueFrom } from 'rxjs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
 // DTO
@@ -18,11 +20,18 @@ import { ManagerDTO } from '../../../common/models/ms-admin/dto/manager.dto';
 import { Manager } from 'src/common/models/ms-admin/class/manager.class';
 // Constants
 import { AdminManagerMSG } from 'src/common/utils/proxy/constants';
+import { ErrorService } from 'src/common/utils/errors/error.service';
 
+/**
+ * Manager controller is the gateway to {@link [ms-admin-manager](../../../../../ms-admin/src/admin/manager/manager.controller.ts)}
+ */
 @ApiTags('Admin/Manager')
 @Controller('api/v1/admin/manager')
 export class ManagerController {
-  constructor(private readonly clientProxy: ClientProxySupermarket) { }
+  constructor(
+    private readonly clientProxy: ClientProxySupermarket,
+    private readonly errorService: ErrorService,
+  ) {}
   private clientProxyAdmin = this.clientProxy.clientProxyAdmin();
 
   /** Get all managers */
@@ -57,20 +66,25 @@ export class ManagerController {
     return this.clientProxyAdmin.send(AdminManagerMSG.GET_ONE, id);
   }
 
-  /** Create a manager */
+  /** Create a manager 
+   * 
+   * @param {ManagerDTO} manager
+   * @return {boolean} Return true if manager was created otherwise returns false
+  */
   @ApiOperation({
     summary: 'Create a manager',
   })
   @ApiResponse({
     status: 200,
     description:
-      'Create a manager',
+      'Return true if manager was created otherwise returns an error',
     isArray: false,
     type: Boolean,
   })
   @Post('/create')
-  createManager(@Body() ManagerDTO: ManagerDTO) {
-    return this.clientProxyAdmin.send(AdminManagerMSG.CREATE, ManagerDTO);
+  async createManager(@Body() manager: ManagerDTO) {
+    const response = await lastValueFrom( this.clientProxyAdmin.send(AdminManagerMSG.CREATE, manager) );
+    return this.errorService.isError(response);
   }
 
   /** Update a manager */
