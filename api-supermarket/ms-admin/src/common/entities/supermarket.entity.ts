@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DepartmentEntity } from './department.entity';
-import { ManagerEntity } from './managet.entity';
+import { ManagerEntity } from './manager.entity';
 
 @Entity({ name: 'supermarket' })
 export class SupermarketEntity {

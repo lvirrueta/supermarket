@@ -8,7 +8,7 @@ export class ManagerDTO {
   @ApiProperty()
   mothersLastName: string;
   @ApiProperty()
-  dateBirth: Date;
+  bornDate: Date;
   @ApiProperty()
   genere: string;
   @ApiProperty()
