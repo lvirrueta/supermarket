@@ -15,6 +15,15 @@ export class ManagerService {
 
   // --------------- Service Controllers --------------------
 
+  /** Get all managers */
+  public async getAllManagersService(): Promise<ManagerEntity[]> {
+    try {
+      return await this.getAllManagers();
+    } catch (error) {
+      return error;
+    }
+  }
+
   /** Create a manager Service */
   public async createManagerService(manager: ManagerDTO): Promise< boolean | HttpException > {
     try {
@@ -33,6 +42,20 @@ export class ManagerService {
   }
 
   // --------------- Database Connections --------------------
+
+  private async getAllManagers(): Promise<ManagerEntity[]> {
+    const queryRunner = await this.startConnection();
+    try {
+      const managers = await queryRunner.manager.find(ManagerEntity,{
+        relations: ['supermarket'],
+      })
+      await queryRunner.release();
+      return managers;
+    } catch (error) {
+      await queryRunner.release();
+      throw error
+    }
+  }
 
   /** Save manager */
   private async saveManager( manager: ManagerDTO ): Promise<boolean> {

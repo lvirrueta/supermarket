@@ -10,8 +10,8 @@ export class ManagerController {
 
   /** Get all managers */
   @MessagePattern(AdminManagerMSG.GET_ALL)
-  getAllManagers() {
-    return 'hi ms im get all';
+  async getAllManagers() {
+    return await this.managerService.getAllManagersService();
   }
 
   /** Get one manager by id */
