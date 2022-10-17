@@ -3,7 +3,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 // Dependencies
 import { DataSource, QueryRunner } from 'typeorm';
 // Entities
-import { ManagerEntity } from 'src/common/entities/managet.entity';
+import { ManagerEntity } from 'src/common/entities/manager.entity';
 // DTO
 import { ManagerDTO } from 'src/common/models/ms-admin/dto/manager.dto';
 
@@ -24,7 +24,16 @@ export class ManagerService {
     }
   }
 
-  /** Create a manager Service */
+    /** Get one manager */
+    public async getOneManagerService( id: string ): Promise<ManagerEntity> {
+      try {
+        return await this.getOneManagerByID( id );
+      } catch (error) {
+        return error;
+      }
+    }
+
+  /** Create a manager */
   public async createManagerService(manager: ManagerDTO): Promise< boolean | HttpException > {
     try {
       const managerSaved = await this.findManagerByEmail(manager.email);
@@ -43,6 +52,7 @@ export class ManagerService {
 
   // --------------- Database Connections --------------------
 
+  /** Get all managers from database */
   private async getAllManagers(): Promise<ManagerEntity[]> {
     const queryRunner = await this.startConnection();
     try {
@@ -51,6 +61,24 @@ export class ManagerService {
       })
       await queryRunner.release();
       return managers;
+    } catch (error) {
+      await queryRunner.release();
+      throw error
+    }
+  }
+
+  /** Get one manager by id from database */
+  private async getOneManagerByID( id: string ): Promise <ManagerEntity> {
+    const queryRunner = await this.startConnection();
+    try {
+      const manager = await queryRunner.manager.findOne(ManagerEntity,{
+        relations: ['supermarket'],
+        where: {
+          id: id,
+        }
+      })
+      await queryRunner.release();
+      return manager;
     } catch (error) {
       await queryRunner.release();
       throw error

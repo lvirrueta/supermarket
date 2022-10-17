@@ -16,8 +16,8 @@ export class ManagerController {
 
   /** Get one manager by id */
   @MessagePattern(AdminManagerMSG.GET_ONE)
-  getManagerByID(@Payload() id: string) {
-    return 'hi ms im get one';
+  async getManagerByID(@Payload() id: string) {
+    return await this.managerService.getOneManagerService(id);
   }
 
   /** Create a manager */
