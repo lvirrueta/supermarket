@@ -3,11 +3,14 @@ import { AppModule } from './app.module';
 import { AllExceptionFilter } from './common/utils/filters/http-exception.filter';
 import { TimeOutInterceptor } from './common/utils/interceptors/timeout.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { ValidationPipe } from '@nestjs/common';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalInterceptors(new TimeOutInterceptor());
+  app.useGlobalPipes(new ValidationPipe());
   const OPTIONS = new DocumentBuilder()
     .setTitle('API Supermarket')
     .setDescription('Supermarket management system')
