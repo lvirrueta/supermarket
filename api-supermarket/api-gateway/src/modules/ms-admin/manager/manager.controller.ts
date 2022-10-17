@@ -7,11 +7,9 @@ import {
   Param,
   Delete,
   Controller,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 // Dependencies
-import { Observable, firstValueFrom, lastValueFrom } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
 // DTO

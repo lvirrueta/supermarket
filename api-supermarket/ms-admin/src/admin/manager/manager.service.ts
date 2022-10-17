@@ -1,7 +1,11 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { ManagerEntity } from 'src/common/entities/managet.entity';
-import { ManagerDTO } from 'src/common/models/ms-admin/dto/manager.dto';
+// Nest Imports
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+// Dependencies
 import { DataSource, QueryRunner } from 'typeorm';
+// Entities
+import { ManagerEntity } from 'src/common/entities/managet.entity';
+// DTO
+import { ManagerDTO } from 'src/common/models/ms-admin/dto/manager.dto';
 
 @Injectable()
 export class ManagerService {
@@ -9,26 +13,68 @@ export class ManagerService {
     private readonly dataSource: DataSource,
   ) { }
 
-  /** Create a manager */
+  // --------------- Service Controllers --------------------
+
+  /** Create a manager Service */
   public async createManagerService(manager: ManagerDTO): Promise< boolean | HttpException > {
-    const queryRunner = await this.startTransaction();
     try {
-      await queryRunner.manager.save(ManagerEntity, manager);
-      await queryRunner.commitTransaction();
-      await queryRunner.release();
-      return true;
+      const managerSaved = await this.findManagerByEmail(manager.email);
+      if (managerSaved){
+        return new HttpException(
+          'Conflict: This email is already registered',
+          HttpStatus.CONFLICT
+        )
+      }
+      await this.saveManager(manager);
+      return true; 
     } catch (error) {
-      await queryRunner.rollbackTransaction();
-      await queryRunner.release();
       return error;
     }
   }
 
-  /** Start a transaction */
-  private async startTransaction(): Promise<QueryRunner> {
-    const queryRunner = this.dataSource.createQueryRunner();
+  // --------------- Database Connections --------------------
+
+  /** Save manager */
+  private async saveManager( manager: ManagerDTO ): Promise<boolean> {
+    const queryRunner = await this.startConnection();
+    try {
+      await queryRunner.manager.save(ManagerEntity, manager);
+      await queryRunner.release();
+      return true;
+    } catch (error) {
+      await queryRunner.release();
+      throw error;
+    }
+  }
+
+  /** Find manager by email */
+  private async findManagerByEmail( email: string ): Promise<ManagerEntity> {
+    const queryRunner = await this.startConnection();
+    try {
+      const manager = await queryRunner.manager.findOne(
+        ManagerEntity, {
+          where: {
+            email: email,
+          }
+        }
+      )
+      await queryRunner.release();
+      return manager;
+    } catch (error) {
+      await queryRunner.release();
+      throw error;
+    }
+  }
+
+  /** Start a connection 
+   * @param {boolean} withTransaction - Its an optional argument, put it true, if you want to start a transaction
+   * @return {QueryRunner} return a QueryRunner
+  */
+  private async startConnection( withTransaction: boolean = false ): Promise<QueryRunner> {
+    const queryRunner = await this.dataSource.createQueryRunner();
     await queryRunner.connect();
-    await queryRunner.startTransaction();
+    if ( withTransaction ) await queryRunner.startTransaction();
     return queryRunner;
   }
+
 }
