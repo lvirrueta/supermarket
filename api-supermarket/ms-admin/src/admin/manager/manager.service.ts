@@ -32,7 +32,7 @@ export class ManagerService {
         return manager
       } else {
         return new HttpException(
-          'Not Found: No manger founded',
+          'Not Found: Manger not found',
           HttpStatus.NOT_FOUND
         )
       };
@@ -120,6 +120,26 @@ export class ManagerService {
     }
   }
 
+  /** Find manager by id from database */
+  private async findManagerByID( id: string, relations: string[] = [] ): Promise<ManagerEntity> {
+    const queryRunner = await this.startConnection();
+    try {
+      const manager = await queryRunner.manager.findOne(
+        ManagerEntity, {
+          where: {
+            id: id,
+          },
+          relations: relations,
+        }
+      )
+      await queryRunner.release();
+      return manager;
+    } catch (error) {
+      await queryRunner.release();
+      throw error;
+    }
+  }
+
   /** Find manager by email from database */
   private async findManagerByEmail( email: string ): Promise<ManagerEntity> {
     const queryRunner = await this.startConnection();
@@ -139,20 +159,6 @@ export class ManagerService {
     }
   }
 
-
-  /** Update manager to database */
-  private async updateManager( manager: ManagerEntity ): Promise<boolean> {
-    const queryRunner = await this.startConnection();
-    try {
-      await queryRunner.manager.update(ManagerEntity, manager.id, manager);
-      await queryRunner.release();
-      return true;
-    } catch (error) {
-      await queryRunner.release();
-      throw error;
-    }
-  }
-
   /** Save manager to database */
   private async saveManager( manager: ManagerDTO ): Promise<boolean> {
     const queryRunner = await this.startConnection();
@@ -166,20 +172,13 @@ export class ManagerService {
     }
   }
 
-  /** Find manager by id from database */
-  private async findManagerByID( id: string, relations: string[] = [] ): Promise<ManagerEntity> {
+  /** Update manager to database */
+  private async updateManager( manager: ManagerEntity ): Promise<boolean> {
     const queryRunner = await this.startConnection();
     try {
-      const manager = await queryRunner.manager.findOne(
-        ManagerEntity, {
-          where: {
-            id: id,
-          },
-          relations: relations,
-        }
-      )
+      await queryRunner.manager.update(ManagerEntity, manager.id, manager);
       await queryRunner.release();
-      return manager;
+      return true;
     } catch (error) {
       await queryRunner.release();
       throw error;
