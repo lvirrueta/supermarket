@@ -19,7 +19,7 @@ export class DepartmentEntity {
 
   @ManyToOne(
     () => SupermarketEntity,
-    (supermercado) => supermercado.departamentos,
+    (supermercado) => supermercado.departments,
   )
   supermarket: SupermarketEntity;
 

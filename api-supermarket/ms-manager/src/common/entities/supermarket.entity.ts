@@ -20,7 +20,7 @@ export class SupermarketEntity {
   businessName: string;
 
   @Column()
-  estado: string;
+  state: string;
 
   @Column()
   email: string;
@@ -32,7 +32,7 @@ export class SupermarketEntity {
   street: string;
 
   @Column()
-  numero: number;
+  number: number;
 
   @Column()
   suburb: string;
@@ -50,5 +50,5 @@ export class SupermarketEntity {
     () => DepartmentEntity,
     (department) => department.supermarket,
   )
-  departamentos: DepartmentEntity[];
+  departments: DepartmentEntity[];
 }
