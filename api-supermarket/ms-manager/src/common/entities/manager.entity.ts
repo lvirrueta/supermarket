@@ -27,7 +27,7 @@ export class ManagerEntity {
   @Column()
   genere: string;
 
-  @Column()
+  @Column({unique: true})
   email: string;
 
   @Column({ type: 'bigint' })
