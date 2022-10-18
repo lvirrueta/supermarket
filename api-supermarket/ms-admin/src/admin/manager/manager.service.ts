@@ -25,9 +25,17 @@ export class ManagerService {
   }
 
   /** Get one manager */
-  public async getOneManagerService( id: string ): Promise<ManagerEntity> {
+  public async getOneManagerService( id: string ): Promise<ManagerEntity | HttpException> {
     try {
-      return await this.findManagerByID( id );
+      const manager = await this.findManagerByID( id );
+      if (manager) {
+        return manager
+      } else {
+        return new HttpException(
+          'Not Found: No manger founded',
+          HttpStatus.NOT_FOUND
+        )
+      };
     } catch (error) {
       return error;
     }
@@ -85,6 +93,16 @@ export class ManagerService {
     }
   }
 
+  /** Delete manager */
+  public async deleteManagerService( id: string ): Promise<boolean> {
+    try {
+      await this.deleteManagerById(id);
+      return true;
+    } catch (error) {
+      return error;
+    }
+  }
+
   // --------------- Database Connections --------------------
 
   /** Get all managers from database */
@@ -102,7 +120,27 @@ export class ManagerService {
     }
   }
 
-  /** Save manager to database */
+  /** Find manager by email from database */
+  private async findManagerByEmail( email: string ): Promise<ManagerEntity> {
+    const queryRunner = await this.startConnection();
+    try {
+      const manager = await queryRunner.manager.findOne(
+        ManagerEntity, {
+          where: {
+            email: email,
+          }
+        }
+      )
+      await queryRunner.release();
+      return manager;
+    } catch (error) {
+      await queryRunner.release();
+      throw error;
+    }
+  }
+
+
+  /** Update manager to database */
   private async updateManager( manager: ManagerEntity ): Promise<boolean> {
     const queryRunner = await this.startConnection();
     try {
@@ -148,19 +186,13 @@ export class ManagerService {
     }
   }
 
-  /** Find manager by email from database */
-  private async findManagerByEmail( email: string ): Promise<ManagerEntity> {
+  /** Delete manager from database */
+  private async deleteManagerById( id: string ): Promise<boolean> {
     const queryRunner = await this.startConnection();
     try {
-      const manager = await queryRunner.manager.findOne(
-        ManagerEntity, {
-          where: {
-            email: email,
-          }
-        }
-      )
+      await queryRunner.manager.delete(ManagerEntity, id);
       await queryRunner.release();
-      return manager;
+      return true;
     } catch (error) {
       await queryRunner.release();
       throw error;

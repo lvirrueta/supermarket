@@ -17,7 +17,7 @@ export class ManagerController {
 
   /** Get one manager by id */
   @MessagePattern(AdminManagerMSG.GET_ONE)
-  async getManagerByID(@Payload() id: string): Promise<ManagerEntity> {
+  async getManagerByID(@Payload() id: string): Promise<ManagerEntity | HttpException> {
     return await this.managerService.getOneManagerService(id);
   }
 
@@ -35,8 +35,8 @@ export class ManagerController {
 
   /** Delete a manager */
   @MessagePattern(AdminManagerMSG.DELETE)
-  delete(@Payload() id: string) {
-    return 'hi ms im delete';
+  async delete(@Payload() id: string): Promise<boolean> {
+    return await this.managerService.deleteManagerService(id);
   }
 
 }
