@@ -1,6 +1,8 @@
 // Nest
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Param } from '@nestjs/common';
 // Dependencies
+import { lastValueFrom } from 'rxjs';
+import { ErrorService } from 'src/common/utils/errors/error.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
 // DTO
@@ -8,10 +10,17 @@ import { SupermarketDTO } from '../../../common/models/ms-manager/dto/supermarke
 // Constants
 import { ManagerSupermarketMSG } from 'src/common/utils/proxy/constants';
 
+
+/**
+ * Supermarket controller is the gateway to {@link [ms-manager-supermarket](../../../../../ms-manager/src/manager/supermarket/supermarket.controller.ts)}
+ */
 @ApiTags('Manager/Supermarket')
 @Controller('api/v1/manager/supermarket')
 export class SupermarketController {
-  constructor(private readonly clientProxy: ClientProxySupermarket) { }
+  constructor(
+    private readonly clientProxy: ClientProxySupermarket,
+    private readonly errorService: ErrorService,
+    ) { }
   private clientProxyManager = this.clientProxy.clientProxyManager();
 
   /** Create a supermarket */
@@ -25,9 +34,10 @@ export class SupermarketController {
     isArray: false,
     type: Boolean,
   })
-  @Post('create/supermarket')
-  createSupermarket(@Body() supermarket: SupermarketDTO) {
-    return this.clientProxyManager.send(ManagerSupermarketMSG.CREATE, supermarket);
+  @Post('create/supermarket/:idManager')
+  async createSupermarket(@Param('idManager') idManager: string, @Body() supermarket: SupermarketDTO) {
+    const response = await lastValueFrom( this.clientProxyManager.send( ManagerSupermarketMSG.CREATE, {supermarket, idManager} ));
+    return this.errorService.isError(response);
   }
   
 }

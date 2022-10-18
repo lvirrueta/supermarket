@@ -1,7 +1,11 @@
+// Nest Imports
 import { Controller } from '@nestjs/common';
+// Dependencies
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AdminSupermarketMSG } from 'src/common/utils/proxy/constants';
+// Service
 import { SupermarketService } from './supermarket.service';
+// Constants
+import { AdminSupermarketMSG } from 'src/common/utils/proxy/constants';
 
 @Controller()
 export class SupermarketController {

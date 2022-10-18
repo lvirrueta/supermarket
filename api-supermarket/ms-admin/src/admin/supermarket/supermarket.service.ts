@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { DepartmentEntity } from 'src/common/entities/department.entity';
-import { SupermarketEntity } from 'src/common/entities/supermarket.entity';
 // Dependencies
 import { DataSource, QueryRunner } from 'typeorm';
+// Entities
+import { SupermarketEntity } from 'src/common/entities/supermarket.entity';
+
 @Injectable()
 export class SupermarketService {
   constructor(
