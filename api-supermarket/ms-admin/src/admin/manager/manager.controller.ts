@@ -1,9 +1,15 @@
+// Nest Imports
 import { Controller, HttpException } from '@nestjs/common';
+// Dependencies
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { ManagerEntity } from 'src/common/entities/manager.entity';
-import { ManagerDTO } from 'src/common/models/ms-admin/dto/manager.dto';
-import { AdminManagerMSG } from 'src/common/utils/proxy/constants';
+// Services
 import { ManagerService } from './manager.service';
+// Entities
+import { ManagerEntity } from 'src/common/entities/manager.entity';
+// DTO
+import { ManagerDTO } from 'src/common/models/ms-admin/dto/manager.dto';
+// Constants
+import { AdminManagerMSG } from 'src/common/utils/proxy/constants';
 
 @Controller()
 export class ManagerController {
