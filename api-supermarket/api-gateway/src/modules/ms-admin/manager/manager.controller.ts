@@ -44,8 +44,9 @@ export class ManagerController {
     type: Manager,
   })
   @Get('/get')
-  getAllManagers(): Observable<Manager[]> {
-    return this.clientProxyAdmin.send(AdminManagerMSG.GET_ALL, '');
+  async getAllManagers(): Promise<Observable<Manager[]>> {
+    const response = await lastValueFrom( this.clientProxyAdmin.send( AdminManagerMSG.GET_ALL, '' ) );
+    return this.errorService.isError(response);
   }
 
   /** Get one manager by id */
@@ -60,8 +61,9 @@ export class ManagerController {
     type: Manager,
   })
   @Get('get/:id')
-  getManagerByID(@Param('id') id: string): Observable<Manager> {
-    return this.clientProxyAdmin.send(AdminManagerMSG.GET_ONE, id);
+  async getManagerByID(@Param('id') id: string): Promise<Observable<Manager>> {
+    const response = await lastValueFrom( this.clientProxyAdmin.send( AdminManagerMSG.GET_ONE, id ) );
+    return this.errorService.isError(response);
   }
 
   /** Create a manager 
@@ -80,7 +82,7 @@ export class ManagerController {
     type: Boolean,
   })
   @Post('/create')
-  async createManager(@Body() manager: ManagerDTO) {
+  async createManager(@Body() manager: ManagerDTO): Promise<Observable<boolean>> {
     const response = await lastValueFrom( this.clientProxyAdmin.send(AdminManagerMSG.CREATE, manager) );
     return this.errorService.isError(response);
   }
@@ -97,8 +99,9 @@ export class ManagerController {
     type: Boolean,
   })
   @Put('/update/:id')
-  updateManager(@Param('id') id: string, @Body() ManagerDTO: ManagerDTO) {
-    return this.clientProxyAdmin.send(AdminManagerMSG.UPDATE, { ManagerDTO, id });
+  async updateManager(@Param('id') id: string, @Body() ManagerDTO: ManagerDTO): Promise<Observable<boolean>> {
+    const response = await lastValueFrom( this.clientProxyAdmin.send( AdminManagerMSG.UPDATE, { ManagerDTO, id } ));
+    return this.errorService.isError(response);
   }
 
   /** Delete a manager */
@@ -113,8 +116,9 @@ export class ManagerController {
     type: Boolean,
   })
   @Delete('/delete/:id')
-  deleteManager(@Param('id') id: string) {
-    return this.clientProxyAdmin.send(AdminManagerMSG.DELETE, id);
+  async deleteManager(@Param('id') id: string): Promise<Observable<boolean>> {
+    const response = await lastValueFrom( this.clientProxyAdmin.send( AdminManagerMSG.DELETE, id ));
+    return this.errorService.isError(response);
   }
 
 }

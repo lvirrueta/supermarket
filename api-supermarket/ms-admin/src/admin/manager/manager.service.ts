@@ -18,23 +18,23 @@ export class ManagerService {
   /** Get all managers */
   public async getAllManagersService(): Promise<ManagerEntity[]> {
     try {
-      return await this.getAllManagers();
+      return await this.findAllManagers();
     } catch (error) {
       return error;
     }
   }
 
-    /** Get one manager */
-    public async getOneManagerService( id: string ): Promise<ManagerEntity> {
-      try {
-        return await this.getOneManagerByID( id );
-      } catch (error) {
-        return error;
-      }
+  /** Get one manager */
+  public async getOneManagerService( id: string ): Promise<ManagerEntity> {
+    try {
+      return await this.findManagerByID( id );
+    } catch (error) {
+      return error;
     }
+  }
 
   /** Create a manager */
-  public async createManagerService(manager: ManagerDTO): Promise< boolean | HttpException > {
+  public async createManagerService( manager: ManagerDTO ): Promise<boolean | HttpException> {
     try {
       const managerSaved = await this.findManagerByEmail(manager.email);
       if (managerSaved){
@@ -50,10 +50,45 @@ export class ManagerService {
     }
   }
 
+  /** Update manager
+   * @param {ManagerDTO} manager
+   * @param {string} id
+  */
+  public async updateManagerService( managerDTO: ManagerDTO, id: string ): Promise<boolean | HttpException> {
+    try {
+      const managerByID = await this.findManagerByID(id, ['supermarket']);
+      if (!managerByID){
+        return new HttpException(
+          'Conflict: This id is not registered',
+          HttpStatus.CONFLICT
+        )
+      }
+      if (managerByID.email !== managerDTO.email){
+        const managerByEmail = await this.findManagerByEmail(managerDTO.email);
+        if (managerByEmail){
+          return new HttpException(
+            'Conflict: This email is already registered',
+            HttpStatus.CONFLICT
+          )
+        }
+      }
+      const managerEntity: ManagerEntity = {
+        id: id, 
+        supermarket: managerByID.supermarket,
+        ...managerDTO, 
+      }
+      console.log(managerEntity);
+      await this.updateManager(managerEntity);
+      return true; 
+    } catch (error) {
+      return error;
+    }
+  }
+
   // --------------- Database Connections --------------------
 
   /** Get all managers from database */
-  private async getAllManagers(): Promise<ManagerEntity[]> {
+  private async findAllManagers(): Promise<ManagerEntity[]> {
     const queryRunner = await this.startConnection();
     try {
       const managers = await queryRunner.manager.find(ManagerEntity,{
@@ -67,25 +102,20 @@ export class ManagerService {
     }
   }
 
-  /** Get one manager by id from database */
-  private async getOneManagerByID( id: string ): Promise <ManagerEntity> {
+  /** Save manager to database */
+  private async updateManager( manager: ManagerEntity ): Promise<boolean> {
     const queryRunner = await this.startConnection();
     try {
-      const manager = await queryRunner.manager.findOne(ManagerEntity,{
-        relations: ['supermarket'],
-        where: {
-          id: id,
-        }
-      })
+      await queryRunner.manager.update(ManagerEntity, manager.id, manager);
       await queryRunner.release();
-      return manager;
+      return true;
     } catch (error) {
       await queryRunner.release();
-      throw error
+      throw error;
     }
   }
 
-  /** Save manager */
+  /** Save manager to database */
   private async saveManager( manager: ManagerDTO ): Promise<boolean> {
     const queryRunner = await this.startConnection();
     try {
@@ -98,7 +128,27 @@ export class ManagerService {
     }
   }
 
-  /** Find manager by email */
+  /** Find manager by id from database */
+  private async findManagerByID( id: string, relations: string[] = [] ): Promise<ManagerEntity> {
+    const queryRunner = await this.startConnection();
+    try {
+      const manager = await queryRunner.manager.findOne(
+        ManagerEntity, {
+          where: {
+            id: id,
+          },
+          relations: relations,
+        }
+      )
+      await queryRunner.release();
+      return manager;
+    } catch (error) {
+      await queryRunner.release();
+      throw error;
+    }
+  }
+
+  /** Find manager by email from database */
   private async findManagerByEmail( email: string ): Promise<ManagerEntity> {
     const queryRunner = await this.startConnection();
     try {
