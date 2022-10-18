@@ -9,7 +9,9 @@ import {
   Controller,
 } from '@nestjs/common';
 // Dependencies
+import { lastValueFrom } from 'rxjs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ErrorService } from 'src/common/utils/errors/error.service';
 import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
 // DTO
 import { DepartmentDTO } from '../../../common/models/ms-manager/dto/department.dto';
@@ -21,7 +23,10 @@ import { ManagerDepartmentMSG } from 'src/common/utils/proxy/constants';
 @ApiTags('Manager/Departments')
 @Controller('api/v1/manager/department')
 export class DepartmentController {
-  constructor(private readonly clientProxy: ClientProxySupermarket) { }
+  constructor(
+    private readonly clientProxy: ClientProxySupermarket,
+    private readonly errorService: ErrorService,
+    ) { }
   private clientProxyManager = this.clientProxy.clientProxyManager();
 
   /** Get all departments */
@@ -36,8 +41,9 @@ export class DepartmentController {
     type: Department,
   })
   @Get('get')
-  getDepartments() {
-    return this.clientProxyManager.send(ManagerDepartmentMSG.GET_ALL, '');
+  async getDepartments() {
+    const response = await lastValueFrom( this.clientProxyManager.send( ManagerDepartmentMSG.GET_ALL, '' ) );
+    return this.errorService.isError(response);
   }
 
   /** Create a department */
@@ -52,8 +58,9 @@ export class DepartmentController {
     type: Boolean,
   })
   @Post('create')
-  createDepartment(@Body() department: DepartmentDTO) {
-    return this.clientProxyManager.send(ManagerDepartmentMSG.CREATE, department);
+  async createDepartment(@Body() department: DepartmentDTO) {
+    const response = await lastValueFrom( this.clientProxyManager.send( ManagerDepartmentMSG.CREATE, department ) );
+    return this.errorService.isError(response);
   }
 
   /** Update a department */
@@ -68,8 +75,9 @@ export class DepartmentController {
     type: Boolean,
   })
   @Put('update/:id')
-  updateDepartment(@Body() department: DepartmentDTO, @Param('id') id: string) {
-    return this.clientProxyManager.send(ManagerDepartmentMSG.UPDATE, { department, id });
+  async updateDepartment(@Body() department: DepartmentDTO, @Param('id') id: string) {
+    const response = await lastValueFrom( this.clientProxyManager.send( ManagerDepartmentMSG.UPDATE, { department, id } ) );
+    return this.errorService.isError(response);
   }
 
   /** Delete a department */
@@ -84,8 +92,9 @@ export class DepartmentController {
     type: Boolean,
   })
   @Delete('delete/:id')
-  deleteDepartments(@Param('id') id: string) {
-    return this.clientProxyManager.send(ManagerDepartmentMSG.DELETE, id);
+  async deleteDepartments(@Param('id') id: string) {
+    const response = await lastValueFrom( this.clientProxyManager.send( ManagerDepartmentMSG.DELETE, id ) );
+    return this.errorService.isError(response);
   }
 
 }
