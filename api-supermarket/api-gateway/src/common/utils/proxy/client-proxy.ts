@@ -29,4 +29,15 @@ export class ClientProxySupermarket {
     })
   }
 
+  /** Proxy of module auth */
+  clientProxyAuth(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: this.config.get('AMQP_URL'),
+        queue: RabbitMQ.AuthQueue,
+      }
+    })
+  }
+
 }
