@@ -10,18 +10,23 @@ import {
 } from '@nestjs/common';
 // Dependencies
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ErrorService } from 'src/common/utils/errors/error.service';
 import { ClientProxySupermarket } from 'src/common/utils/proxy/client-proxy';
 // DTO
 import { EmployeeDTO } from '../../../common/models/ms-manager/dto/employee.dto';
 // Classes
+import { Employee } from 'src/common/models/ms-manager/class/employee.class';
 // Constants
 import { ManagerEmployeeMSG } from 'src/common/utils/proxy/constants';
-import { Employee } from 'src/common/models/ms-manager/class/employee.class';
+import { lastValueFrom } from 'rxjs';
 
 @ApiTags('Manager/Employees')
 @Controller('api/v1/manager/employee')
 export class EmployeeController {
-  constructor(private readonly clientProxy: ClientProxySupermarket) { }
+  constructor(
+    private readonly clientProxy: ClientProxySupermarket,
+    private readonly errorService: ErrorService,
+    ) { }
   private clientProxyManager = this.clientProxy.clientProxyManager();
 
   /** Get all employees */
@@ -36,8 +41,9 @@ export class EmployeeController {
     type: Employee,
   })
   @Get('get')
-  getEmployees() {
-    return this.clientProxyManager.send(ManagerEmployeeMSG.GET_ALL, '');
+  async getEmployees() {
+    const response = await lastValueFrom( this.clientProxyManager.send(ManagerEmployeeMSG.GET_ALL, '') );
+    return this.errorService.isError(response);
   }
 
   /** Get one employee by id */
@@ -52,8 +58,10 @@ export class EmployeeController {
     type: Employee,
   })
   @Get('get/:id')
-  getEmployee(@Param('id') id: string) {
-    return this.clientProxyManager.send(ManagerEmployeeMSG.GET_ONE, id);
+  async getEmployee(@Param('id') id: string) {
+    const response = await lastValueFrom( this.clientProxyManager.send(ManagerEmployeeMSG.GET_ONE, id) );
+    return this.errorService.isError(response);
+    return ;
   }
 
   /** Create one employee */
@@ -68,8 +76,9 @@ export class EmployeeController {
     type: Boolean,
   })
   @Post('create')
-  createEmployee(@Body() employee: EmployeeDTO) {
-    return this.clientProxyManager.send(ManagerEmployeeMSG.CREATE, employee);
+  async createEmployee(@Body() employee: EmployeeDTO) {
+    const response = await lastValueFrom( this.clientProxyManager.send(ManagerEmployeeMSG.CREATE, employee) );
+    return this.errorService.isError(response);
   }
 
   /** Update one employee */
@@ -84,8 +93,9 @@ export class EmployeeController {
     type: Boolean,
   })
   @Put('update/:id')
-  updateEmployee(@Body() employee: EmployeeDTO, @Param('id') id: string) {
-    return this.clientProxyManager.send(ManagerEmployeeMSG.UPDATE, { employee, id });
+  async updateEmployee(@Body() employee: EmployeeDTO, @Param('id') id: string) {
+    const response = await lastValueFrom( this.clientProxyManager.send(ManagerEmployeeMSG.UPDATE, { employee, id }));
+    return this.errorService.isError(response);
   }
 
   /** Delete a employee */
@@ -100,7 +110,8 @@ export class EmployeeController {
     type: Boolean,
   })
   @Delete('delete/:id')
-  deleteEmployee(@Param('id') id: string) {
-    return this.clientProxyManager.send(ManagerEmployeeMSG.DELETE, id);
+  async deleteEmployee(@Param('id') id: string) {
+    const response = await lastValueFrom( this.clientProxyManager.send(ManagerEmployeeMSG.DELETE, id) );
+    return this.errorService.isError(response);
   }
 }

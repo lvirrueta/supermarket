@@ -16,10 +16,10 @@ export class EmployeeEntity {
   mothersLastName: string;
 
   @Column()
-  phone: string;
+  phone: number;
 
   @Column()
-  wordDays: string;
+  workingDays: string;
 
   @Column({ unique: true })
   customID: string;

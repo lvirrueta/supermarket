@@ -49,6 +49,14 @@ export class ErrorService {
         this.logger.error(`Code: ${dbError.code} Error: NOT NULL VIOLATION`);
         break
       }
+      case '23505': {
+        this.logger.error(`Code: ${dbError.code} Error: KEY MOST BE UNIQUE`);
+        throw new HttpException(
+          `${dbError.detail}`,
+          HttpStatus.CONFLICT,
+        );
+        break
+      }
       default: {
         this.logger.error(`Status 500 Error: ${dbError.code}`);
         break;
