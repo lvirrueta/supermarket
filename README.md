@@ -1,4 +1,4 @@
-*Read this in other languages: [English](README.md), [Español](README.es.md).*
+*Lee esto en otros lenguajes: [English](README.md), [Español](README.es.md).*
 
 # Supermarket platform
 
