@@ -1,6 +1,7 @@
 export enum RabbitMQ {
   AdminQueue = 'adminQueue',
   ManagerQueue = 'managerQueue',
+  AuthQueue = 'authQueue',
 }
 
 /* AdminModule Constants */
@@ -38,3 +39,9 @@ export enum ManagerSupermarketMSG {
   CREATE = 'CREATE_SUPERMARKET',
 }
 /* END ManagerModule Constants */
+
+/* Auth Constants */
+export enum AuthMSG {
+  SIGN_IN = 'SIGN_IN',
+}
+/* END Auth Constants */
